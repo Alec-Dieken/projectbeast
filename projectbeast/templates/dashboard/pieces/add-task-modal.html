@@ -1,0 +1,25 @@
+<div id="add-task-modal" class="hidden">
+  <div class="modal-project-container">
+    <h2>Add Task</h2>
+    <form
+      id="add-task-form"
+      method="POST"
+      action="/group/{{group.group_link}}/tasks/add"
+    >
+      {{add_task_form.hidden_tag()}} 
+
+      {% for field in add_task_form if field.widget.input_type != 'hidden' %}
+        {%for error in field.errors%}
+          <p id="error-flashed">{{ error }}</p>
+        {%endfor%} 
+      {%endfor%}
+      
+      {{add_task_form.task_name(placeholder=add_task_form.task_name.label.text, class='user-text-input')}}
+      {{add_task_form.description(placeholder=add_task_form.description.label.text, class='user-text-input')}}
+      {{add_task_form.priority}}
+      {{add_task_form.type}}
+      {{add_task_form.project_id}}
+      {{add_task_form.submit(class="blue-btn")}}
+    </form>
+  </div>
+</div>

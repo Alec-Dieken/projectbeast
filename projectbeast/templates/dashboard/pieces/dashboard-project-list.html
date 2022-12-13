@@ -1,0 +1,51 @@
+<div id="projects-panel" class="panel">
+  <div class="panel-header">
+    <img src="/static/images/dashboard/folders.svg" />
+    <h2>Projects</h2>
+  </div>
+
+  {% if user.groups %} {% if active_projects %}
+  <div class="project-list-header">
+    <div class="project-name-column">
+      <div>Project Name</div>
+    </div>
+
+    <div class="project-group-column">
+      <div>Group</div>
+    </div>
+    <div class="project-open-tasks-column">
+      <div>Open Tasks</div>
+    </div>
+    <div class="project-description-column">
+      <div>Description</div>
+    </div>
+  </div>
+
+  {% for project in active_projects %}
+  <a
+    class="project-list-item"
+    href="/group/{{project.group.group_link}}/{{project.id}}"
+  >
+    <div class="project-name-column">
+      <div>{{project.name}}</div>
+    </div>
+
+    <div class="project-group-column">
+      <div>{{project.group.group_name}} ({{project.role}})</div>
+    </div>
+    <div class="project-open-tasks-column">
+      <div>{{project.num_of_tasks}}</div>
+    </div>
+    <div class="project-description-column">
+      <div>{{project.description}}</div>
+    </div>
+  </a>
+  {% endfor %} {% else %}
+
+  <p class="empty-panel-text">No active projects.</p>
+  {%endif%} {%else%}
+  <p class="empty-panel-text">
+    No active projects. Create or join a group to add projects.
+  </p>
+  {% endif %}
+</div>

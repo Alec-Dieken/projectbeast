@@ -1,0 +1,49 @@
+<nav>
+  <div id="logo-container">
+    <img src="/static/images/global/wolf.png" alt="ProjectBeast Icon" />
+    <span class="logo">Project<span>Beast</span></span>
+  </div>
+
+  <div id="nav-container">
+    <div id="profile-container">
+      <img
+        src="{{current_user.user_picture_url}}"
+        alt="Picture"
+        width="100px"
+      />
+      <p>{{current_user.email}}</p>
+    </div>
+    <ul>
+      <li>
+        <a href="/">
+          <img src="/static/images/dashboard/dashboard.svg" />
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="/messages">
+          <img src="/static/images/dashboard/messages.svg" />
+          Messages
+        </a>
+      </li>
+      <li>
+        <a href="/profile/{{user.username}}">
+          <img src="/static/images/dashboard/account.svg" />
+          Account
+        </a>
+      </li>
+      <li>
+        <a href="/peers">
+          <img src="/static/images/dashboard/peers.svg" />
+          Peers
+        </a>
+      </li>
+      <li>
+        <a href="{{url_for('logout')}}" id="logout-container">
+          <img src="/static/images/dashboard/logout.svg" />
+          Logout
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

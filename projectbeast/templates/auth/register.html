@@ -1,0 +1,72 @@
+{% extends '/auth/auth-base.html'%} {% block content %}
+<main class="registration-container">
+  <div class="registration-wrapper">
+    {%include 'logo.html'%}
+
+    <h1>Sign up</h1>
+    {% with messages = get_flashed_messages() %} {% for message in messages %}
+    <p>{{message}}</p>
+    {%endfor%} {%endwith%}
+
+    <div class="registration-form-container">
+      <form method="POST" action="/register">
+        {{form.hidden_tag()}}
+        <div class="input-container">
+          {% if form.terms.errors %}
+          <p class="form-error">{{form.terms.errors[0]}}</p>
+          {% endif %}
+          <div class="left-form">
+            {{form.email(placeholder=form.email.label.text)}} {% if
+            form.email.errors %}
+            <p class="form-error">{{form.email.errors[0]}}</p>
+            {% endif %}
+            {{form.confirm_email(placeholder=form.confirm_email.label.text)}} {%
+            if form.confirm_email.errors %}
+            <p class="form-error">{{form.confirm_email.errors[0]}}</p>
+            {% endif %} {{form.password(placeholder=form.password.label.text)}}
+            {% if form.password.errors %}
+            <p class="form-error">{{form.password.errors[0]}}</p>
+            {% endif %}
+            {{form.confirm_password(placeholder=form.confirm_password.label.text)}}
+            {% if form.confirm_password.errors %}
+            <p class="form-error">{{form.confirm_password.errors[0]}}</p>
+            {% endif %}
+          </div>
+
+          <div class="right-form">
+            {{form.username(placeholder=form.username.label.text)}} {% if
+            form.username.errors %}
+            <p class="form-error">{{form.username.errors[0]}}</p>
+            {% endif %}
+            {{form.firstname(placeholder=form.firstname.label.text)}} {% if
+            form.firstname.errors %}
+            <p class="form-error">{{form.firstname.errors[0]}}</p>
+            {% endif %} {{form.lastname(placeholder=form.lastname.label.text)}}
+            {% if form.lastname.errors %}
+            <p class="form-error">{{form.lastname.errors[0]}}</p>
+            {% endif %}
+            <div>
+              {{form.terms}}
+              <p>
+                I have read and agree to <a href="#">Terms and Conditions.</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {{form.submit}}
+      </form>
+
+      <p>Already have an account? <a href="/login">Login here.</a></p>
+      <p>
+        Don't feel like creating an account?
+        <a href="#">Explore with a demo account.</a>
+      </p>
+    </div>
+    <p id="login-socials-text">Login/Sign up with Socials</p>
+
+    {%include 'social-links.html'%}
+  </div>
+</main>
+
+{% endblock %}

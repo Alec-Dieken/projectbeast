@@ -1,0 +1,46 @@
+<div class="panel">
+  <div class="panel-header">
+    <img src="/static/images/dashboard/task.svg" />
+    <h2>Tasks</h2>
+  </div>
+  {% if active_projects %} {% if active_tasks%}
+  <div class="task-list-header">
+    <div class="task-name-column">
+      <div>Task Name</div>
+    </div>
+    <div class="task-project-column">
+      <div>Project</div>
+    </div>
+    <div class="task-priority-column">
+      <div>Priority</div>
+    </div>
+    <div class="task-description-column">
+      <div>Description</div>
+    </div>
+  </div>
+
+  {% for task in active_tasks %}
+  <a
+    class="task-list-item"
+    href="/group/{{task.group.group_link}}/{{task.project.id}}/{{task.id}}"
+  >
+    <div class="task-name-column">
+      <div>{{task.name}}</div>
+    </div>
+    <div class="task-project-column">
+      <div>{{task.project.project_name}} ({{task.group_name}})</div>
+    </div>
+    <div class="task-priority-column">
+      <div>{{task.priority}}</div>
+    </div>
+    <div class="task-description-column">
+      <div>{{task.description}}</div>
+    </div>
+  </a>
+  {% endfor %} {%else%}
+
+  <p class="empty-panel-text">No active tasks.</p>
+  {% endif %} {% else %}
+  <p class="empty-panel-text">No active tasks.</p>
+  {% endif %}
+</div>

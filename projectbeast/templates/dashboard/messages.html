@@ -1,0 +1,60 @@
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %}
+{%include '/dashboard/pieces/nav-base.html'%}
+
+<main>
+  <div class="main-inner-container">
+    <header>
+      <h1>Messages</h1>
+      {%include '/dashboard/pieces/search-bar.html'%}
+    </header>
+
+    <div class="dashboard-panel-container">
+      {% if info_for_message_link %}
+      <div class="messages-link-container">
+        {% for message in info_for_message_link %}
+        <h2>{{message.peer_username}}:</h2>
+        <a class="message-link" href="/messages/{{message.peer_username}}">
+          <img src="{{message.peer_photo}}" />
+          <div>
+            <p
+              {%
+              if
+              not
+              message.is_read
+              %}class="message-link-bold"
+              {%
+              endif
+              %}
+            >
+              {{message.message}}
+            </p>
+            <p class="message-info-small">
+              Sent by {{message.sender_text}} at {{message.sent_at}}
+            </p>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <h2>No messages. Go to 'Peers' to start a new message!</h2>
+      {% endif %}
+    </div>
+  </div>
+</main>
+
+{%include '/dashboard/pieces/group-bar.html'%}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/modals-3.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/nav.js') }}"
+></script>
+
+{% endblock %}

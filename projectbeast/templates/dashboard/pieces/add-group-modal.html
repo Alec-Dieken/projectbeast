@@ -1,0 +1,13 @@
+<div id="add-group-modal" class="hidden">
+  <div class="modal-project-container">
+    <h2>Add Group</h2>
+    <form id="add-group-form" method="POST" action="/groups/add">
+      {{add_group_form.hidden_tag()}} {% for field in add_group_form if
+      field.widget.input_type != 'hidden' %} {%for error in field.errors%}
+      <p id="error-flashed">{{ error }}</p>
+      {%endfor%} {%endfor%}
+      {{add_group_form.group_name(placeholder=add_group_form.group_name.label.text,
+      class='user-text-input')}} {{add_group_form.submit(class="blue-btn")}}
+    </form>
+  </div>
+</div>

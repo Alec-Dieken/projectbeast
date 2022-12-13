@@ -1,0 +1,40 @@
+{% extends '/auth/auth-base.html'%} {% block content %}
+<main class="registration-container">
+  <div class="registration-wrapper">
+    {%include 'logo.html'%}
+
+    <h1>Login</h1>
+    {% with messages = get_flashed_messages() %} {% for message in messages %}
+    <p class="form-error">{{message}}</p>
+    {%endfor%} {%endwith%}
+    <div class="registration-form-container">
+      <form method="POST" action="/login">
+        {{form.hidden_tag()}}
+        <div class="input-container">
+          <div class="middle-form">
+            {{form.email(placeholder=form.email.label.text)}}
+            {{form.password(placeholder=form.password.label.text)}}
+            <div>
+              {{form.remember}}
+              <p>Remember me?</p>
+            </div>
+          </div>
+        </div>
+
+        {{form.submit}}
+      </form>
+
+      <p><a href="/reset-password">Forgot password?</a></p>
+      <p>Need an account? <a href="/register">Sign up here.</a></p>
+      <p>
+        Don't feel like creating an account?
+        <a href="#">Explore with a demo account.</a>
+      </p>
+    </div>
+    <p id="login-socials-text">Login/Sign up with Socials</p>
+
+    {%include 'social-links.html'%}
+  </div>
+</main>
+
+{% endblock %}

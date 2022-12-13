@@ -1,0 +1,60 @@
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %}
+{%include '/dashboard/pieces/nav-base.html'%}
+
+<main>
+  {%include '/dashboard/pieces/add-group-modal.html'%}
+  <div class="main-inner-container">
+    <header>
+      <h1>Peers</h1>
+      {%include '/dashboard/pieces/search-bar.html'%}
+    </header>
+
+    {% with messages = get_flashed_messages() %} {% for message in messages %}
+    <p class="form-error">{{message}}</p>
+    {%endfor%} {%endwith%} {% if peers %}
+    <ul class="peers-list">
+      {% for peer in peers %}
+      <li class="peer-list-item">
+        <a href="/profile/{{peer.username}}">
+          <div>
+            <img
+              src="{{peer.user_picture_url}}"
+              alt="Profile Picture"
+              width="50px"
+            />
+            <p>{{peer.username}}</p>
+          </div>
+        </a>
+        <div>
+          <a href="/messages/{{peer.username}}"
+            ><button class="blue-btn">Message</button></a
+          >
+          <form method="POST" action="/peers/remove/{{peer.id}}">
+            <button class="red-btn">Remove</button>
+          </form>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <h2 class="peers-h2">Add peers to see them here!</h2>
+    {% endif %}
+  </div>
+</main>
+
+{%include '/dashboard/pieces/group-bar.html'%}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/modals-3.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/nav.js') }}"
+></script>
+
+{% endblock %}

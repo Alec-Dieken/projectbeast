@@ -1,0 +1,171 @@
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %}
+{%include '/dashboard/pieces/nav-base.html'%}
+
+<main>
+  <div class="main-inner-container">
+    <header>
+      <h1>Account</h1>
+      {%include '/dashboard/pieces/search-bar.html'%}
+    </header>
+
+    <div class="dashboard-panel-container">
+      <section id="dashboard-main">
+        <div class="upload-image-container">
+          <div class="profile-picture-wrapper">
+            <img
+              src="{{profile_user.user_picture_url}}"
+              class="profile-image"
+            />
+            {% if profile_user.id == user.id %}<img
+              src="/static/images/dashboard/add-photo.png"
+              class="profile-image-hover"
+            />{%endif%}
+          </div>
+
+          {% if profile_user.id == user.id %}
+          <form
+            id="image-form"
+            method="POST"
+            enctype="multipart/form-data"
+            class="hidden"
+          >
+            {{image_form.hidden_tag()}} {{image_form.upload(class='img-input')}}
+            {{image_form.submit(class='blue-btn')}}
+          </form>
+          {% endif %}
+        </div>
+
+        {% if profile_user.id == user.id %} {% if form.firstname.errors %}
+        <p class="form-error">{{form.firstname.errors[0]}}</p>
+        {% endif %} {% if form.lastname.errors %}
+        <p class="form-error">{{form.lastname.errors[0]}}</p>
+        {% endif %} {% if form.username.errors %}
+        <p class="form-error">{{form.username.errors[0]}}</p>
+        {% endif %} {% if form.bio.errors %}
+        <p class="form-error">{{form.bio.errors[0]}}</p>
+        {% endif %} {% endif %}
+
+        <div class="account-info">
+          <h3>
+            Name: {{profile_user.firstname}}{% if profile_user.lastname %}
+            {{profile_user.lastname}}{%endif%}
+          </h3>
+          <h3>Username: {{profile_user.username}}</h3>
+          <h3>Email: {{profile_user.email}}</h3>
+          {% if profile_user.bio %}
+          <h3>Bio: {{profile_user.bio}}</h3>
+          {% endif %} {% if profile_user.id == user.id %}
+          <button class="blue-btn" id="show-edit-account-button">
+            Edit Account
+          </button>
+
+          <div id="delete-account">
+            <button id="deleteBtn" class="red-btn">Delete Account</button>
+          </div>
+
+          <div id="confirm-delete" class="hidden">
+            <p>Are you sure you want to delete your account?</p>
+            <div><button id="cancel2" class="blue-btn">Cancel</button></div>
+            <form method="POST" action="/profile/{{user.username}}/delete">
+              <button type="submit" class="red-btn">Confirm Delete</button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if profile_user.id == user.id %}
+        <div class="edit-account-form-wrapper hidden">
+          <form id="edit-account-form" method="POST">
+            {{form.hidden_tag()}}
+
+            <div>
+              <h3>First Name:</h3>
+              {{form.firstname(value=user.firstname)}}
+            </div>
+
+            <div>
+              <h3>Last name:</h3>
+              {{form.lastname(value=user.lastname)}}
+            </div>
+
+            <div>
+              <h3>Username:</h3>
+              {{form.username(value=user.username)}}
+            </div>
+
+            <div>
+              <h3>Email:</h3>
+              <p>{{user.email}}</p>
+            </div>
+
+            <div>
+              <h3>Bio:</h3>
+              {% if user.bio %}
+              <textarea
+                id="bio"
+                name="bio"
+                placeholder="Write your bio here..."
+              >
+{{user.bio}}</textarea
+              >
+              {% else %} {{form.bio(placeholder="Write your bio here...")}} {%
+              endif %}
+            </div>
+
+            <div>{{form.submit(class="blue-btn")}}</div>
+          </form>
+          <button id="cancel" class="red-btn">Cancel</button>
+        </div>
+        {% endif %}
+      </section>
+
+      <aside id="dashboard-aside"></aside>
+    </div>
+  </div>
+</main>
+
+{%include '/dashboard/pieces/group-bar.html'%}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/nav.js') }}"
+></script>
+<script type="text/javascript">
+  let $editButton = $("#show-edit-account-button");
+  let $cancelButton = $("#cancel");
+  let $accountInfo = $(".account-info");
+  let $editForm = $(".edit-account-form-wrapper");
+  let $deleteBtn = $("#deleteBtn");
+  let $deleteWrapper = $("#delete-account");
+  let $confirmDelete = $("#confirm-delete");
+
+  $editButton.on("click", function () {
+    $accountInfo.toggleClass("hidden");
+    $editForm.toggleClass("hidden");
+  });
+
+  $cancelButton.on("click", function () {
+    $accountInfo.toggleClass("hidden");
+    $editForm.toggleClass("hidden");
+  });
+
+  $(".profile-image").on("click", function (e) {
+    $("#image-form").toggleClass("hidden");
+  });
+
+  $deleteBtn.on("click", function (e) {
+    $deleteWrapper.addClass("hidden");
+    $confirmDelete.removeClass("hidden");
+  });
+
+  $("#cancel2").on("click", function (e) {
+    $deleteWrapper.removeClass("hidden");
+    $confirmDelete.addClass("hidden");
+  });
+</script>
+
+{% endblock %}

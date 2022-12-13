@@ -1,0 +1,72 @@
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %}
+{%include '/dashboard/pieces/nav-base.html'%}
+
+<main>
+  {%include '/dashboard/pieces/add-group-modal.html'%}
+  <div class="main-inner-container">
+    <header>
+      <h1>Search Results</h1>
+      {%include '/dashboard/pieces/search-bar.html'%}
+    </header>
+
+    {% with messages = get_flashed_messages() %} {% for message in messages %}
+    <p class="form-error">{{message}}</p>
+    {%endfor%} {%endwith%} {% if results %}
+    <ul class="peers-list">
+      {% for result in results %}
+      <li class="peer-list-item">
+        <a href="/profile/{{result.username}}">
+          <div>
+            <img
+              src="{{result.user_picture_url}}"
+              alt="Profile Picture"
+              width="50px"
+            />
+            <p>{{result.username}}</p>
+          </div>
+        </a>
+        {% if result.id in peers %}
+        <div>
+          <a href="/messages/{{result.username}}"
+            ><button class="blue-btn">Message</button></a
+          >
+          <form method="POST" action="/peers/remove/{{result.id}}">
+            <button class="red-btn">Remove</button>
+          </form>
+        </div>
+        {% else %} {% if result.id in peer_request_ids %}
+        <div>
+          <button class="green-btn dull">Invite Sent</button>
+        </div>
+        {% else %}
+        <div>
+          <form method="POST" action="/peers/invite/{{result.id}}">
+            <button class="green-btn">Add Peer</button>
+          </form>
+        </div>
+        {% endif %} {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <h2 class="peers-h2">No results matching your search.</h2>
+    {% endif %}
+  </div>
+</main>
+
+{%include '/dashboard/pieces/group-bar.html'%}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/modals-3.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/nav.js') }}"
+></script>
+
+{% endblock %}

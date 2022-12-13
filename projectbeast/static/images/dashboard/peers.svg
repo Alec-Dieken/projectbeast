@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svgjs="http://svgjs.com/svgjs" xmlns:xlink="http://www.w3.org/1999/xlink" width="288" height="288" viewBox="0 0 115.71 98.29">
+	<g fill="#d5d4db" class="color000 svgShape" data-name="Layer 2">
+		<g class="color000 svgShape" data-name="Layer 1">
+			<path d="M99 53.07h-9a23.31 23.31 0 0 1 1.41 8v33.88a10 10 0 0 1-.58 3.35h14.81a10 10 0 0 0 10-10V69.79A16.75 16.75 0 0 0 99 53.07zm-31-8.72H47.53A16.75 16.75 0 0 0 30.8 61.08v33.87a3.35 3.35 0 0 0 3.35 3.35H81.4a3.35 3.35 0 0 0 3.35-3.35V61.08A16.75 16.75 0 0 0 68 44.35zM57.77 0a20.11 20.11 0 1 0 20.12 20.12A20.14 20.14 0 0 0 57.77 0zM93.1 18.75a15 15 0 1 0 15 15 15.06 15.06 0 0 0-15-15zM16.73 53.07h9a23.31 23.31 0 0 0-1.41 8v33.88a10 10 0 0 0 .58 3.35H10a10 10 0 0 1-10-10V69.79a16.75 16.75 0 0 1 16.73-16.72z" class="color000 svgShape" />
+			<path d="M22.61 18.75a15 15 0 1 1-15 15 15.06 15.06 0 0 1 15-15Z" class="color000 svgShape" />
+		</g>
+	</g>
+</svg>

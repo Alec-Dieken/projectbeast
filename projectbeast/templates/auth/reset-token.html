@@ -1,0 +1,33 @@
+{% extends '/auth/auth-base.html'%} {% block content %}
+<main class="registration-container">
+  <div class="registration-wrapper">
+    {%include 'logo.html'%}
+
+    <h1>Forgot Password</h1>
+
+    <div class="registration-form-container">
+      <form>
+        {{form.hidden_tag()}}
+        <div class="input-container">
+          <div class="middle-form">
+            {{form.password(placeholder=form.password.label.text)}}
+            {{form.confirm_password(placeholder=form.confirm_password.label.text)}}
+          </div>
+        </div>
+
+        {{form.submit}}
+      </form>
+
+      <p>Already have an account? <a href="#">Login here.</a></p>
+      <p>
+        Don't feel like creating an account?
+        <a href="#">Explore with a demo account.</a>
+      </p>
+    </div>
+    <p id="login-socials-text">Login/Sign up with Socials</p>
+
+    {%include 'social-links.html'%}
+  </div>
+</main>
+
+{% endblock %}

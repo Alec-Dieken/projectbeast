@@ -1,0 +1,202 @@
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %}
+{%include '/dashboard/pieces/nav-base.html'%}
+
+<main>
+  {%include '/dashboard/pieces/add-group-modal.html'%}
+
+  <div class="main-inner-container">
+    <header>
+      <h1>Dashboard</h1>
+
+      {%include '/dashboard/pieces/search-bar.html'%}
+    </header>
+
+    <div class="dashboard-panel-container">
+      <section id="dashboard-main">
+        {% with messages = get_flashed_messages() %} {% for message in messages %}
+        <p class="form-error">{{message}}</p>
+        {%endfor%} {%endwith%} {%include
+        '/dashboard/pieces/dashboard-task-list.html'%} {%include
+        '/dashboard/pieces/dashboard-project-list.html'%}
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Charts</h2>
+          </div>
+
+          <div id='chart-info' class='hidden'>
+            <div id='priority-info'>
+              <span id="priority-is-empty" data-empty="{{priority_is_empty}}"></span>
+              <span id="priority-low" data-low="{{priority_chart_data.low}}"></span>
+              <span id="priority-med" data-med="{{priority_chart_data.med}}"></span>
+              <span id="priority-high" data-high="{{priority_chart_data.high}}"></span>
+              <span id="priority-imm" data-imm="{{priority_chart_data.imm}}"></span>
+            </div>
+
+            <div id='type-info'>
+              <span id="type-is-empty" data-empty="{{type_is_empty}}"></span>
+              <span id="type-bug" data-bug="{{type_chart_data.bug}}"></span>
+              <span id="type-feature" data-feature="{{type_chart_data.feature}}"></span>
+              <span id="type-other" data-other="{{type_chart_data.other}}"></span>
+            </div>
+          </div>
+
+          <div id="charts-container">
+            {% if not priority_is_empty %}
+            <div>
+              <canvas id="chart1"></canvas>
+            </div>
+            <div>
+              <canvas id="chart2"></canvas>
+            </div>
+            {% else %}
+            <p class="empty-panel-text">Add tasks to see chart data.</p>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+      <aside id="dashboard-aside">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Requests</h2>
+          </div>
+
+          <div class="panel-list">
+            {% if requests %} {% for request in requests %}
+            <div id="request-list">
+              <p>{{request.message}}</p>
+              <form action="{{request.action_url}}" method="POST">
+                <button type="submit" class="green-btn">Accept</button>
+              </form>
+              <form action="/request/decline/{{request.id}}" method="POST">
+                <button type="submit" class="red-btn">Decline</button>
+              </form>
+            </div>
+            {% endfor %} {%else%}
+            <p class="empty-panel-text">No new requests.</p>
+            {%endif%}
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Recent Activity</h2>
+          </div>
+
+          <div class="panel-list">
+            {% if recent_activity %} {% for activity in recent_activity %}
+            <p class="empty-panel-text {{activity.type}}">
+              {{activity.message}}
+            </p>
+            {%endfor%} {%else%}
+            <p class="empty-panel-text">No recent activity.</p>
+            {%endif%}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+{%include '/dashboard/pieces/group-bar.html'%}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/modals-3.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/nav.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/add-project.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/add-task.js') }}"
+></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="text/javascript">
+  const ctx = document.getElementById("chart1");
+  const ctx2 = document.getElementById("chart2");
+
+  const numLow = $('#priority-low').data('low')
+  const numMed = $('#priority-med').data('med')
+  const numHigh = $('#priority-high').data('high')
+  const numImm = $('#priority-imm').data('imm')
+
+  const numBug = $('#type-bug').data('bug')
+  const numFeature = $('#type-feature').data('feature')
+  const numOther = $('#type-other').data('other')
+
+  new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: ["Low", "Medium", "High", "Immediate"],
+      datasets: [
+        {
+          label: "# of Tasks",
+          data: [numLow, numMed, numHigh, numImm],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Tasks by priority'
+        }
+      }
+    },
+  });
+
+  new Chart(ctx2, {
+    type: "doughnut",
+    data: {
+      labels: ["Bug", "Feature", "Other"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [numBug, numFeature, numOther],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Tasks by type'
+        }
+      }
+    },
+  });
+</script>
+
+{% endblock %}

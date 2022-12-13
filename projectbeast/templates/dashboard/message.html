@@ -1,0 +1,117 @@
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %}
+{%include '/dashboard/pieces/nav-base.html'%}
+
+<main>
+  {%include '/dashboard/pieces/add-group-modal.html'%}
+
+  <div class="main-inner-container">
+    <header>
+      <h1>Messages</h1>
+      {%include '/dashboard/pieces/search-bar.html'%}
+    </header>
+
+    <div class="dashboard-panel-container">
+      <section id="message-main">
+        <div id="display-chat-container">
+          <h2>Chat with {{peer.username}}</h2>
+
+          <div id="messages">
+            {% for message in messages%} {% if message.sender_id ==
+            current_user.id %}
+            <div class="sent-container">
+              <p class="sent">{{message.message}}</p>
+            </div>
+            {% else %}
+            <div class="received-container">
+              <p class="received">{{message.message}}</p>
+            </div>
+            {% endif %} {% endfor %}
+          </div>
+
+          <div id="chat-bar">
+            <input
+              type="text"
+              id="message-input"
+              placeholder="Write your message..."
+            />
+            {%include '/svgs/send.html'%}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+{%include '/dashboard/pieces/group-bar.html'%}
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/modals-3.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/nav.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/add-project.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='scripts/add-task.js') }}"
+></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    const room = window.location.pathname.replace("/messages/", "");
+
+    const socket = io();
+
+    $("#message-input").focus();
+
+    socket.on("connect", function () {
+      socket.emit("join", {});
+      socket.emit("mark-as-read");
+    });
+
+    socket.on("message", function (data) {
+      if (data.sender === room) {
+        let $message = $("<p class='received'>").text(data.message);
+        $("#messages").prepend(
+          $("<div class='received-container'>").append($message)
+        );
+        socket.emit("mark-as-read");
+      } else {
+        let $message = $("<p class='sent'>").text(data.message);
+        $("#messages").prepend(
+          $("<div class='sent-container'>").append($message)
+        );
+      }
+    });
+
+    $("#sendBtn").on("click", function () {
+      sendMessage();
+    });
+
+    $(document).keypress(function (e) {
+      let keycode = e.keyCode ? e.keyCode : e.which;
+      if (keycode === 13 && $("#message-input").is(":focus")) {
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      if ($("#message-input").val()) {
+        socket.emit("update-messages", { message: $("#message-input").val() });
+        $("#message-input").val("");
+        $("#message-input").focus();
+      }
+    }
+  });
+</script>
+
+{% endblock %}
