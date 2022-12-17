@@ -23,7 +23,7 @@
             {{form.confirm_email(placeholder=form.confirm_email.label.text)}} {%
             if form.confirm_email.errors %}
             <p class="form-error">{{form.confirm_email.errors[0]}}</p>
-            {% endif %} {{form.password(placeholder=form.password.label.text)}}
+            {% endif %} {{form.password(placeholder=form.password.label.text, autocomplete="new-password")}}
             {% if form.password.errors %}
             <p class="form-error">{{form.password.errors[0]}}</p>
             {% endif %}
@@ -68,16 +68,4 @@
     {%include 'social-links.html'%}
   </div>
 </main>
-
-<script type='text/javascript'>
-  $(document).ready(function() {
-    $('.left-form input').each(function () {
-      $(this).val("");
-    });
-    $('.right-form input').each(function () {
-      $(this).val("");
-    });
-  });
-</script>
-
 {% endblock %}
