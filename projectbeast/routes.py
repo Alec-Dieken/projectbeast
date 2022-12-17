@@ -262,7 +262,7 @@ def terms_and_conditions():
     return '<h2>Terms and Conditions</h2>'
 
 
-# ############################################ LOGOUT ##############################################################
+# ############################################ DEMO ################################################################
 @app.route('/demo')
 def demo_login():
     '''Route for logging in demo account'''
@@ -732,7 +732,7 @@ def search_results():
     results = Users.query.filter(and_(Users.id != current_user.id, func.lower(
         Users.username).contains(query.lower()))).all()
 
-    peers = current_user.get_peers()
+    peers = [peer.id for peer in current_user.get_peers()]
 
     add_group_form = AddGroupForm()
 
