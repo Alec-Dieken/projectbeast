@@ -70,15 +70,14 @@
 </main>
 
 <script type='text/javascript'>
-  $(document).on('load', () => {
+  $(document).ready(function() {
     $('.left-form input').each(function () {
       $(this).val("");
     });
     $('.right-form input').each(function () {
       $(this).val("");
     });
-  })
-
+  });
 </script>
 
 {% endblock %}
