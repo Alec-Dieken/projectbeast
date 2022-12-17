@@ -23,9 +23,6 @@ def init_app():
 
     # Initialize SocketIO
     socketio.init_app(app)
-    socketio.cors_allowed_origins = '*'
-    socketio.engineio_logger = True
-    socketio.logger = True
 
     # Initialize SQLAlchemy
     db.init_app(app)
