@@ -262,6 +262,19 @@ def terms_and_conditions():
     return '<h2>Terms and Conditions</h2>'
 
 
+# ############################################ LOGOUT ##############################################################
+@app.route('/demo')
+def demo_login():
+    '''Route for logging in demo account'''
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    
+    user = Users.query.filter(Users.is_demo_account==True).first()
+    login_user(user)
+    return redirect(url_for('dashboard'))
+
+
+
 # ##################################################################################################################
 # ############################################## FACEBOOK ROUTES ###################################################
 # ##################################################################################################################
