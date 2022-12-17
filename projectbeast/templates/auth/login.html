@@ -39,9 +39,10 @@
 
 <script type='text/javascript'>
   $(document).on('load', () => {
-    $('.middle-form input').val("");
+    $('.middle-form input').each((index) => {
+      $(this).val("");
+    });
   })
-
 </script>
 
 {% endblock %}

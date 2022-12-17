@@ -71,8 +71,12 @@
 
 <script type='text/javascript'>
   $(document).on('load', () => {
-    $('.right-form input').val("");
-    $('.left-form input').val("");
+    $('.left-form input').each((index) => {
+      $(this).val("");
+    });
+    $('.right-form input').each((index) => {
+      $(this).val("");
+    });
   })
 
 </script>
