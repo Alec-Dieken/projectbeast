@@ -198,7 +198,7 @@ def reset_password():
         user = Users.query.filter_by(email=form.email.data).first()
         
         # if user doesn't exist - flash message and redirect back to login page
-        if user is None:
+        if user is None or user.email == 'test@demouser.com':
             flash('If that address is associated with an account, please check your email for further instructions.', 'info')
             return redirect(url_for('login'))
 
@@ -622,6 +622,10 @@ def account(username):
     image_form = UploadImage()
     
     session['previous_url'] = request.full_path
+    
+    if request.method == 'POST':
+        if user.is_demo_account:
+            return redirect(f'/profile/{username}')
 
     if image_form.submit.data and image_form.validate_on_submit():
 
@@ -664,6 +668,9 @@ def delete_account(username):
     
     if user is None or user.id != current_user.id:
         return redirect(url_for('dashboard'))
+    
+    if user.is_demo_account:
+        return redirect(f'/profile/{username}')
     
     else:
         user_tasks = UserTasks.query.filter(UserTasks.user_id == user.id).all()
@@ -732,7 +739,7 @@ def search_results():
     results = Users.query.filter(and_(Users.id != current_user.id, func.lower(
         Users.username).contains(query.lower()))).all()
 
-    peers = current_user.get_peers()
+    peers = [peer.id for peer in current_user.get_peers()]
 
     add_group_form = AddGroupForm()
 
@@ -750,7 +757,7 @@ def search_results():
 
 
 # ############################################## PEER VIEW PAGE #########################################################
-@app.route('/peers', methods=['GET', 'POST'])
+@app.route('/peers')
 @login_required
 def peers_page():
     
@@ -767,6 +774,10 @@ def peers_page():
 @app.route('/peers/invite/<int:peer_id>', methods=['POST'])
 @login_required
 def peer_request(peer_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     peers_obj = Peers.are_peers(current_user.id, peer_id)
     if peers_obj:
         return redirect(session['previous_url'])
@@ -794,6 +805,10 @@ def peer_request(peer_id):
 @app.route('/peers/add/<int:req_id>', methods=['POST'])
 @login_required
 def add_peer(req_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     if not RequestReceivers.query.filter(and_(RequestReceivers.receiver_id == current_user.id, RequestReceivers.request_id == req_id)).first():
         return redirect(session['previous_url'])
 
@@ -829,6 +844,10 @@ def add_peer(req_id):
 @app.route('/peers/remove/<int:peer_id>', methods=['POST'])
 @login_required
 def remove_peer(peer_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     peer_obj = Peers.are_peers(current_user.id, peer_id)
     if peer_obj:
         db.session.delete(peer_obj)
@@ -847,6 +866,10 @@ def remove_peer(peer_id):
 @app.route('/request/decline/<int:request_id>', methods=['POST'])
 @login_required
 def decline_request(request_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     request = Requests.query.filter(Requests.id == request_id).first()
 
     if request is None or request.is_active == False:
@@ -869,6 +892,10 @@ def decline_request(request_id):
 @app.route('/groups/add', methods=['POST'])
 @login_required
 def create_group():
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     add_group_form = AddGroupForm()
     if add_group_form.validate_on_submit():
         group_name = add_group_form.group_name.data
@@ -970,6 +997,10 @@ def edit_group(group_link):
     image_form = UploadImage()
     edit_group_form = EditGroupForm()
     session['previous_url'] = url_for('edit_group', group_link=group_link)
+    
+    if request.method == 'POST':
+        if current_user.is_demo_account:
+            return redirect(session['previous_url'])
 
     if edit_group_form.validate_on_submit():
         new_group_name = edit_group_form.group_name.data
@@ -1006,6 +1037,9 @@ def edit_group(group_link):
 @app.route('/group/<string:group_link>/delete', methods=['POST'])
 @login_required
 def delete_group(group_link):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
 
     group = Groups.query.filter(Groups.group_link == group_link).first()
     if group is None:
@@ -1068,6 +1102,10 @@ def delete_group(group_link):
 @app.route('/group/<string:group_link>/member/<int:member_id>/leave', methods=['POST'])
 @login_required
 def leave_group(group_link, member_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     if member_id != current_user.id:
         return redirect(session['previous_url'])
 
@@ -1101,6 +1139,10 @@ def leave_group(group_link, member_id):
 @app.route('/group/<string:group_link>/promote/<int:member_id>', methods=['POST'])
 @login_required
 def promote_group_member(group_link, member_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     member = Users.query.get(member_id)
     member_user_group = UserGroups.query.filter(
@@ -1121,6 +1163,10 @@ def promote_group_member(group_link, member_id):
 @app.route('/group/<string:group_link>/demote/<int:member_id>', methods=['POST'])
 @login_required
 def demote_group_member(group_link, member_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     member = Users.query.get(member_id)
     member_user_group = UserGroups.query.filter(
@@ -1141,6 +1187,10 @@ def demote_group_member(group_link, member_id):
 @app.route('/group/<string:group_link>/remove/<int:member_id>', methods=['POST'])
 @login_required
 def remove_group_member(group_link, member_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     member = Users.query.get(member_id)
     member_user_group = UserGroups.query.filter(
@@ -1177,6 +1227,10 @@ def remove_group_member(group_link, member_id):
 @app.route('/group/<string:group_link>/members/invite', methods=['POST'])
 @login_required
 def add_group_member(group_link):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     if group is None:
         return redirect(session['previous_url'])
@@ -1214,6 +1268,10 @@ def add_group_member(group_link):
 @app.route('/group/<string:group_link>/members/add/<int:req_id>', methods=['POST'])
 @login_required
 def join_group(group_link, req_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
 
     request = Requests.query.filter(
@@ -1262,6 +1320,10 @@ def join_group(group_link, req_id):
 @app.route('/group/<string:group_link>/projects/add', methods=['POST'])
 @login_required
 def create_project(group_link):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     if group is None:
         return redirect(session['previous_url'])
@@ -1305,6 +1367,9 @@ def create_project(group_link):
 @app.route('/group/<string:group_link>/tasks/add', methods=['POST'])
 @login_required
 def create_task(group_link):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
 
     group = Groups.query.filter(Groups.group_link == group_link).first()
     if group is None:
@@ -1371,6 +1436,10 @@ def project_view(group_link, project_id):
 @app.route('/group/<string:group_link>/<int:project_id>/close', methods=['POST'])
 @login_required
 def close_project(group_link, project_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     user_group = UserGroups.query.filter(and_(
         UserGroups.user_id == current_user.id, UserGroups.group_id == group.id)).first()
@@ -1427,6 +1496,10 @@ def view_task(group_link, project_id, task_id):
 @app.route('/group/<string:group_link>/<int:project_id>/<int:task_id>/complete', methods=['POST'])
 @login_required
 def complete_task(group_link, project_id, task_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     user_group = UserGroups.query.filter(and_(
         UserGroups.user_id == current_user.id, UserGroups.group_id == group.id)).first()
@@ -1453,6 +1526,10 @@ def complete_task(group_link, project_id, task_id):
 @app.route('/group/<string:group_link>/<int:project_id>/<int:task_id>/delete', methods=['POST'])
 @login_required
 def delete_task(group_link, project_id, task_id):
+    
+    if current_user.is_demo_account:
+        return redirect(session['previous_url'])
+    
     group = Groups.query.filter(Groups.group_link == group_link).first()
     user_group = UserGroups.query.filter(and_(
         UserGroups.user_id == current_user.id, UserGroups.group_id == group.id)).first()
@@ -1525,22 +1602,24 @@ def on_join(data):
 
     room = peer_obj.id
     session['room'] = room
-
-    join_room(room)
+    
+    if not current_user.is_demo_account:
+        join_room(room)
 
 
 # ##################################################################################################################
 @socketio.on('mark-as-read')
 def mark_as_read():
     try:
-        messages = Messages.query.filter(and_(
-            Messages.room_name == session['room'],
-            Messages.receiver_id == current_user.id,
-            Messages.is_read == False)).all()
+        if not current_user.is_demo_account:
+            messages = Messages.query.filter(and_(
+                Messages.room_name == session['room'],
+                Messages.receiver_id == current_user.id,
+                Messages.is_read == False)).all()
 
-        for message in messages:
-            message.is_read = True
-            db.session.commit()
+            for message in messages:
+                message.is_read = True
+                db.session.commit()
             
     except:
         return None
@@ -1549,16 +1628,19 @@ def mark_as_read():
 # ##################################################################################################################
 @socketio.on('update-messages')
 def update_message(data):
-    message_data = data['message']
-    peer = Peers.query.get(session['room']).get_peer(current_user.id)
-    
-    new_message = Messages(
-        room_name=session['room'], sender_id=current_user.id, receiver_id=peer.id, message=message_data)
-    
-    db.session.add(new_message)
-    db.session.flush()
-    message_id = new_message.id
-    db.session.commit()
+    if not current_user.is_demo_account:
+        message_data = data['message']
+        peer = Peers.query.get(session['room']).get_peer(current_user.id)
+        
+        new_message = Messages(
+            room_name=session['room'], sender_id=current_user.id, receiver_id=peer.id, message=message_data)
+        
+        db.session.add(new_message)
+        db.session.flush()
+        message_id = new_message.id
+        db.session.commit()
 
-    send({'message': message_data, 'sender': current_user.username,
-          'message_id': message_id}, broadcast=True, room=session['room'])
+        send({'message': message_data, 'sender': current_user.username,
+            'message_id': message_id}, broadcast=True, room=session['room'])
+    else:
+        return None
