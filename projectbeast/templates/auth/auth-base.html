@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/reset.css') }}"
@@ -13,9 +16,20 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/auth.css') }}"
     />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"
+      integrity="sha512-tWHlutFnuG0C6nQRlpvrEhE4QpkG1nn2MOUMWmUeRePl4e3Aki0VB6W1v3oLjFtd0hVOtRQ9PHpSfN6u6/QXkQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <title>
-      {% block title %} {% if pb_title %} ProjectBeast - {{pb_title}} {% else %}
-      ProjectBeast {% endif %} {% endblock %}
+      {% block title %} 
+        {% if pb_title %} 
+          ProjectBeast - {{pb_title}} 
+        {% else %}
+          ProjectBeast 
+        {% endif %} 
+      {% endblock %}
     </title>
   </head>
   <body>
