@@ -654,18 +654,13 @@ def delete_account(username):
     
     else:
         user_tasks = UserTasks.query.filter(UserTasks.user_id == user.id).all()
-        user_projects = UserProjects.query.filter(
-            UserProjects.user_id == user.id).all()
-        user_groups = UserGroups.query.filter(
-            UserGroups.user_id == user.id).all()
+        user_projects = UserProjects.query.filter(UserProjects.user_id == user.id).all()
+        user_groups = UserGroups.query.filter(UserGroups.user_id == user.id).all()
         user_peers = Peers.query.filter(
             or_(Peers.user_id == user.id, Peers.user_id2 == user.id)).all()
-        sent_requests = Requests.query.filter(
-            Requests.sender_id == user.id).all()
-        received_requests = RequestReceivers.query.filter(
-            RequestReceivers.receiver_id == user.id).all()
-        rec_act = RecentActivity.query.filter(
-            RecentActivity.user_id == user.id).all()
+        sent_requests = Requests.query.filter(Requests.sender_id == user.id).all()
+        received_requests = RequestReceivers.query.filter(RequestReceivers.receiver_id == user.id).all()
+        rec_act = RecentActivity.query.filter(RecentActivity.user_id == user.id).all()
         messages = Messages.query.filter(
             or_(Messages.sender_id == user.id, Messages.receiver_id == user.id)).all()
 

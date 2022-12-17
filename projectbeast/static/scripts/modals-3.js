@@ -1,4 +1,4 @@
-$(document).on('click', handleModal);
+$(document).on('mousedown', handleModal);
 $modalContainer = $('.modal-project-container')
 
 function handleModal(e) {

@@ -91,7 +91,7 @@ header {
   width: 100%;
   text-align: center;
   align-items: center;
-  justify-content: space-around left;
+  justify-content: space-evenly;
 }
 
 header > img {

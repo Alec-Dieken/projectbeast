@@ -15,9 +15,8 @@
       <section id="dashboard-main">
         {% with messages = get_flashed_messages() %} {% for message in messages %}
         <p class="form-error">{{message}}</p>
-        {%endfor%} {%endwith%} {%include
-        '/dashboard/pieces/dashboard-task-list.html'%} {%include
-        '/dashboard/pieces/dashboard-project-list.html'%}
+        {%endfor%} {%endwith%} {%include '/dashboard/pieces/dashboard-task-list.html'%} 
+        {%include '/dashboard/pieces/dashboard-project-list.html'%}
 
         <div class="panel">
           <div class="panel-header">
@@ -132,71 +131,78 @@
   const numMed = $('#priority-med').data('med')
   const numHigh = $('#priority-high').data('high')
   const numImm = $('#priority-imm').data('imm')
+  const priorityEmpty = $('#priority-is-empty').data('empty')
 
   const numBug = $('#type-bug').data('bug')
   const numFeature = $('#type-feature').data('feature')
   const numOther = $('#type-other').data('other')
+  const typeEmpty = $('#type-is-empty').data('empty')
 
-  new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: ["Low", "Medium", "High", "Immediate"],
-      datasets: [
-        {
-          label: "# of Tasks",
-          data: [numLow, numMed, numHigh, numImm],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-        },
-        title: {
-          display: true,
-          text: 'Tasks by priority'
-        }
-      }
-    },
-  });
 
-  new Chart(ctx2, {
-    type: "doughnut",
-    data: {
-      labels: ["Bug", "Feature", "Other"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [numBug, numFeature, numOther],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
+  if(priorityEmpty == 'False') {
+    new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: ["Low", "Medium", "High", "Immediate"],
+        datasets: [
+          {
+            label: "# of Tasks",
+            data: [numLow, numMed, numHigh, numImm],
+            borderWidth: 1,
+          },
+        ],
       },
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'top',
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
         },
-        title: {
-          display: true,
-          text: 'Tasks by type'
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Tasks by priority'
+          }
         }
-      }
-    },
-  });
+      },
+    });
+  }
+
+  if(typeEmpty == 'False') {
+    new Chart(ctx2, {
+      type: "doughnut",
+      data: {
+        labels: ["Bug", "Feature", "Other"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [numBug, numFeature, numOther],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Tasks by type'
+          }
+        }
+      },
+    });
+  }
 </script>
 
 {% endblock %}
