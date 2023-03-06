@@ -3,6 +3,7 @@ CONTENTS OF THIS FILE
 
  * Introduction
  * How to Use
+ * Upcoming Features/Bug Fixes
  * Maintainers
  
  
@@ -22,6 +23,12 @@ To edit your profile image, click on the image on your account page, which will 
 Groups are located on the far-right navigation menu. Here you can create a new group by clicking on the + icon, or you can click on an existing group icon to view it's contents. Groups will contain all the group-related projects, tasks, and memebers - orginized by superiority ( creator > admin > member ). Each rank will have different levels of control to edit the group and projects.
 
 To use the live instant messaging feature, you must be 'peers' with that other person. You can become peers with someone by looking them up by username and clicking on the 'add peer' button, or if they are in the same group as you, you can add them from the member list. Once they accept, you can then navigate to the peers page from the link on the left-side menu, then click on message.
+
+UPCOMING FEATURES/BUG FIXES
+-----------
+* Currently, the pages for 'privacy policy', 'terms and conditions', and 'how-to-delete-your-account' pages are blank, which are required for using the social media APIs. These pages are on their way. This website is simply for demonstration purposes, and if you wish to delete your account, you may go to your account page and click on 'delete account' or you can send me an email to alec@alecdieken.com
+* Pages with long group/project/task names cause bad styling at the top of the page. This will be fixed soon.
+* There is currently very little responsive UI for the website once logged-in. A mobile-friendly version is in the works.
 
 MAINTAINERS
 -----------
