@@ -1,176 +1,133 @@
-{% extends '/dashboard/pieces/dashboard-base.html'%} 
-
-{% block content %}
-{%include '/dashboard/pieces/nav-base.html'%}
+{% extends '/dashboard/pieces/dashboard-base.html'%} {% block content %} {%include '/dashboard/pieces/nav-base.html'%}
 
 <main>
-  {%include '/dashboard/pieces/add-group-modal.html'%}
-  
-  {% if is_admin %}
-    {%include '/dashboard/pieces/add-project-modal.html'%} 
-    {%include '/dashboard/pieces/add-task-modal.html'%}
-  {% endif %}
+    {%include '/dashboard/pieces/add-group-modal.html'%} {% if is_admin %} {%include '/dashboard/pieces/add-project-modal.html'%} {%include
+    '/dashboard/pieces/add-task-modal.html'%} {% endif %}
 
-  <div id="add-group-member-modal" class="hidden">
-    <div class="modal-project-container">
-      <h2>Invite Peers</h2>
-      {% if add_group_member_form.peers.choices|length == 0 %}
-      <p class="empty-panel-text">No peers to add</p>
-      {% else %}
-      <form
-        id="add-group-member-form"
-        method="POST"
-        action="/group/{{group.group_link}}/members/invite"
-      >
-        {{add_group_member_form.hidden_tag()}} 
-        {% for field in add_group_member_form if field.widget.input_type != 'hidden' %} 
-          {%for error in field.errors%}
-            <p id="error-flashed">{{ error }}</p>
-          {%endfor%} 
-          {{field(class='user-text-input')}}
-        {%endfor%}
-      </form>
-      {%endif%}
-    </div>
-  </div>
-
-  <div class="main-inner-container">
-    <header>
-      <img src="{{group.group_image}}" />
-      <h1>{{group.group_name}}</h1>
-      {%include '/dashboard/pieces/search-bar.html'%}
-    </header>
-
-    <div class="dashboard-panel-container">
-      <section id="dashboard-main">
-        {% with messages = get_flashed_messages() %} {% for message in messages
-        %}
-        <p class="form-error">{{message}}</p>
-        {%endfor%} {%endwith%} {% if is_creator %}
-        <a class="edit-btn" href="/group/{{group.group_link}}/edit">
-          <button class="blue-btn">Edit Group</button>
-        </a>
-        {% endif %} {%include '/dashboard/pieces/group-task-list.html'%}
-        {%include '/dashboard/pieces/group-project-list.html'%}
-      </section>
-
-      <aside id="dashboard-aside">
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Members</h2>
-            {% if is_admin %}
-            <button id="add-group-member-icon" class="blue-btn">Invite Peers</button>
-            {% endif %} 
-
-            {% if not is_creator%}
-            <form
-              method="POST"
-              action="/group/{{group.group_link}}/member/{{user.id}}/leave"
-            >
-              <button type="submit" class="red-btn">Leave Group</button>
+    <div id="add-group-member-modal" class="hidden">
+        <div class="modal-project-container">
+            <h2>Invite Peers</h2>
+            {% if add_group_member_form.peers.choices|length == 0 %}
+            <p class="empty-panel-text">No peers to add</p>
+            {% else %}
+            <form id="add-group-member-form" method="POST" action="/group/{{group.group_link}}/members/invite">
+                {{add_group_member_form.hidden_tag()}} {% for field in add_group_member_form if field.widget.input_type != 'hidden' %} {%for error in
+                field.errors%}
+                <p id="error-flashed">{{ error }}</p>
+                {%endfor%} {{field(class='user-text-input')}} {%endfor%}
             </form>
-            {% endif %}
-          </div>
-
-          <div class="panel-list">
-            {% if group_creator %}
-            <div class="member-list-item">
-              <div class="member-list-info-wrapper">
-                <img
-                  src="{{group_creator.user_picture_url}}"
-                  alt="user photo"
-                />
-                <p>{{group_creator.username}} (Creator)</p>
-              </div>
-              <div class="member-list-icons">
-                {% if group_creator.id not in peer_ids and group_creator.id !=current_user.id%}
-                {%include '/svgs/add-peer.html'%} 
-                {% endif %}
-              </div>
-            </div>
-            {% endif %} {% for member in group_admins %}
-            <div class="member-list-item">
-              <div class="member-list-info-wrapper">
-                <img src="{{member.user_picture_url}}" alt="user photo" />
-                <p>{{member.username}} (Admin)</p>
-              </div>
-              <div class="member-list-icons">
-                {% if member.id not in peer_ids and member.id !=
-                current_user.id%} {%include '/svgs/add-peer.html'%} {% endif %}
-                {% if is_creator %} {%include '/svgs/arrow-down.html'%}
-                {%include '/svgs/remove-icon.html'%} {% endif %}
-              </div>
-            </div>
-            {% endfor %} {% for member in group_members %}
-            <div class="member-list-item">
-              <div class="member-list-info-wrapper">
-                <img src="{{member.user_picture_url}}" alt="user photo" />
-                <p>{{member.username}} (Member)</p>
-              </div>
-              <div class="member-list-icons">
-                {% if member.id not in peer_ids and member.id !=
-                current_user.id%} {%include '/svgs/add-peer.html'%} {% endif %}
-                {% if is_admin %} {%include '/svgs/arrow-up.html'%} {%include
-                '/svgs/remove-icon.html'%} {% endif %}
-              </div>
-            </div>
-            {% endfor %}
-          </div>
+            {%endif%}
         </div>
-      </aside>
     </div>
-  </div>
+
+    <div class="main-inner-container">
+        <header>
+            <div>
+                <img src="{{group.group_image}}" />
+                <h1>{{group.group_name}}</h1>
+            </div>
+            {%include '/dashboard/pieces/search-bar.html'%}
+        </header>
+
+        <div class="dashboard-panel-container">
+            <section id="dashboard-main">
+                {% with messages = get_flashed_messages() %} {% for message in messages %}
+                <p class="form-error">{{message}}</p>
+                {%endfor%} {%endwith%} {% if is_creator %}
+                <a class="edit-btn" href="/group/{{group.group_link}}/edit">
+                    <button class="blue-btn">Edit Group</button>
+                </a>
+                {% endif %} {%include '/dashboard/pieces/group-task-list.html'%} {%include '/dashboard/pieces/group-project-list.html'%}
+            </section>
+
+            <aside id="dashboard-aside">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Members</h2>
+                        {% if is_admin %}
+                        <button id="add-group-member-icon" class="blue-btn">Invite Peers</button>
+                        {% endif %} {% if not is_creator%}
+                        <form method="POST" action="/group/{{group.group_link}}/member/{{user.id}}/leave">
+                            <button type="submit" class="red-btn">Leave Group</button>
+                        </form>
+                        {% endif %}
+                    </div>
+
+                    <div class="panel-list">
+                        {% if group_creator %}
+                        <div class="member-list-item">
+                            <div class="member-list-info-wrapper">
+                                <img src="{{group_creator.user_picture_url}}" alt="user photo" />
+                                <p>{{group_creator.username}} (Creator)</p>
+                            </div>
+                            <div class="member-list-icons">
+                                {% if group_creator.id not in peer_ids and group_creator.id !=current_user.id%} {%include '/svgs/add-peer.html'%} {% endif %}
+                            </div>
+                        </div>
+                        {% endif %} {% for member in group_admins %}
+                        <div class="member-list-item">
+                            <div class="member-list-info-wrapper">
+                                <img src="{{member.user_picture_url}}" alt="user photo" />
+                                <p>{{member.username}} (Admin)</p>
+                            </div>
+                            <div class="member-list-icons">
+                                {% if member.id not in peer_ids and member.id != current_user.id%} {%include '/svgs/add-peer.html'%} {% endif %} {% if
+                                is_creator %} {%include '/svgs/arrow-down.html'%} {%include '/svgs/remove-icon.html'%} {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %} {% for member in group_members %}
+                        <div class="member-list-item">
+                            <div class="member-list-info-wrapper">
+                                <img src="{{member.user_picture_url}}" alt="user photo" />
+                                <p>{{member.username}} (Member)</p>
+                            </div>
+                            <div class="member-list-icons">
+                                {% if member.id not in peer_ids and member.id != current_user.id%} {%include '/svgs/add-peer.html'%} {% endif %} {% if is_admin
+                                %} {%include '/svgs/arrow-up.html'%} {%include '/svgs/remove-icon.html'%} {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
 </main>
 
 {%include '/dashboard/pieces/group-bar.html'%}
 
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='scripts/modals-3.js') }}"
-></script>
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='scripts/group-bar.js') }}"
-></script>
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='scripts/nav.js') }}"
-></script>
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='scripts/add-project.js') }}"
-></script>
-<script
-  type="text/javascript"
-  src="{{ url_for('static', filename='scripts/add-task.js') }}"
-></script>
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/modals-3.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/group-bar.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/nav.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/add-project.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='scripts/add-task.js') }}"></script>
 
 <script type="text/javascript">
-  $addGroupMemberIcon = $("#add-group-member-icon");
-  $addGroupMemberModal = $("#add-group-member-modal");
-  $addGroupMemberForm = $("#add-group-member-form");
+    $addGroupMemberIcon = $("#add-group-member-icon");
+    $addGroupMemberModal = $("#add-group-member-modal");
+    $addGroupMemberForm = $("#add-group-member-form");
 
-  $addGroupMemberIcon.on("click", showAddToGroup);
+    $addGroupMemberIcon.on("click", showAddToGroup);
 
-  function showAddToGroup() {
-    $addGroupMemberModal.removeClass("hidden");
-  }
+    function showAddToGroup() {
+        $addGroupMemberModal.removeClass("hidden");
+    }
 
-  $("#peer-request-icon").on("click", function () {
-    $("#peer-request-icon").submit();
-  });
+    $("#peer-request-icon").on("click", function () {
+        $("#peer-request-icon").submit();
+    });
 
-  $(".arrow-up-icon-wrapper").on("click", function (e) {
-    e.target.submit();
-  });
+    $(".arrow-up-icon-wrapper").on("click", function (e) {
+        e.target.submit();
+    });
 
-  $(".arrow-down-icon-wrapper").on("click", function (e) {
-    e.target.submit();
-  });
+    $(".arrow-down-icon-wrapper").on("click", function (e) {
+        e.target.submit();
+    });
 
-  $(".remove-icon-wrapper").on("click", function (e) {
-    e.target.submit();
-  });
+    $(".remove-icon-wrapper").on("click", function (e) {
+        e.target.submit();
+    });
 </script>
 
 {% endblock %}

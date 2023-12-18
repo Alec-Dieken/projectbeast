@@ -91,10 +91,20 @@ header {
   width: 100%;
   text-align: center;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 0;
 }
 
-header > img {
+header div {
+  display: flex;
+  gap: 0 1rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+}
+
+header div img {
   width: 3rem;
   margin-right: 1rem;
   border-radius: 50%;
@@ -104,15 +114,14 @@ header > img {
 .search-bar {
   display: flex;
   align-items: center;
-  margin: 0 auto;
-  transform: translateX(-5rem);
   z-index: 0;
+  flex-wrap: nowrap;
 }
 
 .search-bar img {
   width: 1rem;
   position: relative;
-  left: 1.6rem;
+  transform: translateX(60px);
 }
 
 .search-bar img:hover {

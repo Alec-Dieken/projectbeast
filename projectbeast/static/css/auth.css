@@ -205,7 +205,8 @@ form a:visited {
 
 .social-links-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0 5vw;
 }
 
 .facebook-link {
@@ -397,7 +398,7 @@ form a:visited {
 
   .social-links-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     background-color: #1e1e1f;
   }
 
