@@ -83,6 +83,7 @@ tinify.key = os.environ.get("TINIFY_KEY")
 # Allows http callback
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
+#db.create_all()
 
 # ##################################################################################################################
 # ######################################### EMAIL/PASSWORD USER ROUTES #############################################
@@ -100,36 +101,41 @@ def register():
 
     # if request is post, form is submitted, and fields are validated...
     if form.validate_on_submit():
-        # gather form data
-        email = form.email.data
-        password = form.password.data
-        username = form.username.data
-        firstname = form.firstname.data
-        lastname = form.lastname.data
-
-        # register new user with Users.register method (but don't validate account yet)
-        user = Users.register(
-            email=email,
-            password=password,
-            username=username,
-            firstname=firstname,
-            lastname=lastname,
-        )
-
-        # add new user to db
-        db.session.add(user)
-        db.session.commit()
-
-        # send an email to new user with a generated token that will validate their account when visited
         try:
-            send_validation_email(user)
-        except Exception as e:
-            print("Error sending email:", e)
-            flash("Server couldn't send verification email.", "error")
+            # gather form data
+            email = form.email.data
+            password = form.password.data
+            username = form.username.data
+            firstname = form.firstname.data
+            lastname = form.lastname.data
+
+            # register new user with Users.register method (but don't validate account yet)
+            user = Users.register(
+                email=email,
+                password=password,
+                username=username,
+                firstname=firstname,
+                lastname=lastname,
+            )
+
+            # add new user to db
+            db.session.add(user)
+            db.session.commit()
+
+            # send an email to new user with a generated token that will validate their account when visited
+            try:
+                send_validation_email(user)
+            except Exception as e:
+                print("Error sending email:", e)
+                flash("Server couldn't send verification email.", "error")
+                return redirect(url_for("login"))
+            # send back to login page
+            flash("Please check your email to validate your account.", "info")
             return redirect(url_for("login"))
-        # send back to login page
-        flash("Please check your email to validate your account.", "info")
-        return redirect(url_for("login"))
+        except Exception as e:
+            print("Error registering account:", e)
+            flash("There was a problem registering your account.", "error")
+            return redirect(url_for("register"))
     else:
         # GET request
         return render_template("/auth/register.html", form=form, pb_title="Sign up!")
@@ -610,7 +616,6 @@ def account(username):
                 "static/images/users",
                 filename,
             )
-            # image_form.upload.data.save(path)
 
             source = tinify.from_file(image_form.upload.data)
             resized = source.resize(method="cover", width=256, height=256)

@@ -13,7 +13,7 @@ class Config:
     """Setting up Flask config variables"""
 
     # Flask-related configuration variables
-    # Set environment to development
+    # Set environment
     FLASK_ENV = "production"
     # Disable testing mode
     TESTING = False
